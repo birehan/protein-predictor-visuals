@@ -6,8 +6,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useEffect } from "react";
 
 export const HeroSection = () => {
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+        }
+      });
+    });
+
+    document.querySelectorAll(".scroll-animate").forEach((el) => {
+      observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <>
       <section className="relative min-h-[70vh] flex flex-col items-center justify-center px-4 py-20">
@@ -18,7 +35,7 @@ export const HeroSection = () => {
           <h1 className="text-4xl md:text-6xl font-bold text-white animate-fade-in">
             Protein Status Predictor for COVID-19
           </h1>
-          <p className="text-lg md:text-xl text-white/80">
+          <p className="text-lg md:text-xl text-white/80 animate-slide-in">
             Advanced protein analysis tool for COVID-19 research
           </p>
         </div>
@@ -26,7 +43,7 @@ export const HeroSection = () => {
 
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
-          <div className="max-w-xl mx-auto bg-white rounded-lg shadow-lg p-8">
+          <div className="max-w-xl mx-auto bg-white rounded-lg shadow-lg p-8 scroll-animate">
             <h2 className="text-2xl font-semibold text-center mb-8">Predict Protein Status</h2>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Select>
@@ -39,7 +56,7 @@ export const HeroSection = () => {
                   <SelectItem value="p3">Protein 3</SelectItem>
                 </SelectContent>
               </Select>
-              <Button className="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white">
+              <Button className="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white button-hover">
                 Predict
               </Button>
             </div>
