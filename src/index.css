@@ -34,6 +34,9 @@
   body {
     @apply bg-background text-foreground;
   }
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 @keyframes fade-in {
@@ -75,6 +78,15 @@
 .scroll-animate.visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+.scroll-reveal {
+  transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scroll-reveal.visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
 }
 
 .button-hover {
