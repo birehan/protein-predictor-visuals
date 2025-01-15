@@ -29,8 +29,8 @@ export const HeroSection = () => {
   return (
     <>
       <section className="relative min-h-[70vh] flex flex-col items-center justify-center px-4 py-20">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5')] bg-cover bg-center">
-          <div className="absolute inset-0 bg-black/50"></div>
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1633167606207-d840b5070fc2')] bg-cover bg-center">
+          <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/50 to-transparent"></div>
         </div>
         <div className="relative z-10 text-center space-y-8 max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-6xl font-bold text-white animate-fade-in">
