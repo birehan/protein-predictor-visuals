@@ -7,10 +7,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ArrowRight, Search } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export const HeroSection = () => {
+  const [scrollPosition, setScrollPosition] = useState(0);
+
   useEffect(() => {
+    const handleScroll = () => {
+      setScrollPosition(window.scrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -23,18 +31,36 @@ export const HeroSection = () => {
       observer.observe(el);
     });
 
-    return () => observer.disconnect();
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      observer.disconnect();
+    };
   }, []);
 
   return (
     <>
       <section className="relative min-h-[70vh] flex flex-col items-center justify-center px-4 py-20 overflow-hidden">
-        <div className="absolute inset-0">
+        <div 
+          className="absolute inset-0"
+          style={{
+            transform: `translateY(${scrollPosition * 0.5}px)`,
+          }}
+        >
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1633167606207-d840b5070fc2')] bg-cover bg-center animate-zoom-pan">
-            <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-transparent animate-gradient-flow"></div>
+            <div 
+              className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-transparent animate-gradient-flow"
+              style={{
+                transform: `translateY(${scrollPosition * 0.2}px)`,
+              }}
+            ></div>
           </div>
         </div>
-        <div className="relative z-10 text-center space-y-8 max-w-4xl mx-auto">
+        <div 
+          className="relative z-10 text-center space-y-8 max-w-4xl mx-auto"
+          style={{
+            transform: `translateY(${scrollPosition * 0.3}px)`,
+          }}
+        >
           <h1 className="text-4xl md:text-6xl font-bold text-white animate-fade-in">
             Protein Status Predictor for COVID-19
           </h1>
