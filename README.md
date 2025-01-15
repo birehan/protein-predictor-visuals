@@ -1,6 +1,3 @@
-Here is the complete README in proper GitHub Markdown format:
-
-markdown
 # Protein Status Predictor for COVID-19
 
 This is a **Protein Status Predictor for COVID-19** built with **Vite**, **React**, and **TypeScript**, utilizing modern UI libraries and tools such as **Radix UI**, **TailwindCSS**, and **React Router**.
