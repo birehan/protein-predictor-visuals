@@ -6,6 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ArrowRight, Search } from "lucide-react";
 import { useEffect } from "react";
 
 export const HeroSection = () => {
@@ -42,13 +43,14 @@ export const HeroSection = () => {
       </section>
 
       <section className="relative py-16">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-50 via-indigo-50 to-blue-50 animate-gradient-flow"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 animate-gradient-flow"></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-xl mx-auto bg-white/80 backdrop-blur-sm rounded-lg shadow-lg p-8 scroll-animate hover:shadow-xl transition-shadow duration-300">
             <h2 className="text-2xl font-semibold text-center mb-8">Predict Protein Status</h2>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Select>
                 <SelectTrigger className="w-full sm:w-[280px]">
+                  <Search className="mr-2 h-4 w-4" />
                   <SelectValue placeholder="SELECT UNIPROT ID" />
                 </SelectTrigger>
                 <SelectContent>
@@ -59,6 +61,7 @@ export const HeroSection = () => {
               </Select>
               <Button className="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white button-hover">
                 Predict
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
           </div>
