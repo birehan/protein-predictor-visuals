@@ -34,6 +34,9 @@
   body {
     @apply bg-background text-foreground;
   }
+  button, .card {
+    @apply cursor-pointer;
+  }
 }
 
 @keyframes fade-in {
