@@ -8,6 +8,9 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 
 export const ProteinForm = () => {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  console.log("backendUrl: ", backendUrl)
+
   const [proteinEntries, setProteinEntries] = useState<any[]>([]); // State to hold parsed proteins data
   const [loading, setLoading] = useState<boolean>(true);
   const [submitLoading, setSubmitLoading] = useState<boolean>(true);
@@ -255,7 +258,7 @@ export const ProteinForm = () => {
     setSubmitLoading(true); // Start loading animation
 
     try {
-      const response = await fetch(`http://127.0.0.1:5000/api/predict/${selectedModel}`, {
+      const response = await fetch(`${backendUrl}/api/predict/${selectedModel}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
