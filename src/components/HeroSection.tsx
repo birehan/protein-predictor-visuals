@@ -1,3 +1,5 @@
+
+
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -44,8 +46,8 @@ export const HeroSection = () => {
         </div>
       </section>
 
-      <section className="relative py-16">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 animate-gradient-flow"></div>
+      {/* <section className="relative py-16">
+        <div className=" absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 animate-gradient-flow"></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-xl mx-auto bg-white/80 backdrop-blur-sm rounded-lg shadow-lg p-8 scroll-animate hover:shadow-xl transition-shadow duration-300">
             <h2 className="text-2xl font-semibold text-center mb-8">Predict Protein Status</h2>
@@ -68,7 +70,7 @@ export const HeroSection = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
     </>
   );
 };

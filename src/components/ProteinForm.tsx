@@ -1,282 +1,97 @@
-// import { Input } from "@/components/ui/input";
-// import { Label } from "@/components/ui/label";
-// import { Card } from "@/components/ui/card";
-// import { Hash, Network, Activity, Info, Database, GitBranch, Share2 } from "lucide-react";
-// import { useEffect } from "react";
-
-// export const ProteinForm = () => {
-//   useEffect(() => {
-//     const observer = new IntersectionObserver((entries) => {
-//       entries.forEach((entry) => {
-//         if (entry.isIntersecting) {
-//           entry.target.classList.add("visible");
-//         }
-//       });
-//     });
-
-//     document.querySelectorAll(".scroll-animate").forEach((el) => {
-//       observer.observe(el);
-//     });
-
-//     return () => observer.disconnect();
-//   }, []);
-
-//   const getIconForField = (field: string) => {
-//     const icons = {
-//       Subgraph: <Network className="h-4 w-4" />,
-//       Degree: <Hash className="h-4 w-4" />,
-//       Eigenvector: <Activity className="h-4 w-4" />,
-//       Information: <Info className="h-4 w-4" />,
-//       LAC: <Database className="h-4 w-4" />,
-//       Betweenness: <GitBranch className="h-4 w-4" />,
-//       Closeness: <Share2 className="h-4 w-4" />,
-//     };
-//     return icons[field as keyof typeof icons];
-//   };
-
-//   return (
-//     <section className="relative py-16">
-//       <div className="absolute inset-0 bg-gradient-to-tr from-blue-50 via-indigo-50 to-purple-50 animate-gradient-flow"></div>
-//       <div className="max-w-4xl mx-auto px-4 relative z-10">
-//         <h2 className="text-3xl font-bold text-center mb-8 scroll-animate">Enter Protein Data</h2>
-//         <Card className="p-6 bg-white/80 backdrop-blur-sm hover:shadow-xl transition-shadow duration-300 scroll-animate">
-//           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-//             {[
-//               "Subgraph",
-//               "Degree",
-//               "Eigenvector",
-//               "Information",
-//               "LAC",
-//               "Betweenness",
-//               "Closeness",
-//             ].map((field) => (
-//               <div key={field} className="space-y-2 scroll-animate">
-//                 <Label htmlFor={field.toLowerCase()} className="flex items-center gap-2">
-//                   {getIconForField(field)}
-//                   {field}
-//                 </Label>
-//                 <Input
-//                   id={field.toLowerCase()}
-//                   placeholder={`Enter ${field}`}
-//                   className="w-full"
-//                 />
-//               </div>
-//             ))}
-//           </div>
-//         </Card>
-//       </div>
-//     </section>
-//   );
-// };
-
-
-
-import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ArrowRight, Search } from "lucide-react";
+import { useEffect, useState } from "react";
+import Papa from "papaparse"; // Import PapaParse to parse the CSV file
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button"; // Assume Button component is available
-import { useEffect } from "react";
 
 export const ProteinForm = () => {
+  const [proteinEntries, setProteinEntries] = useState<any[]>([]); // State to hold parsed proteins data
+  const [loading, setLoading] = useState<boolean>(true);
+  const [submitLoading, setSubmitLoading] = useState<boolean>(true);
 
-    // Default form values
-    const defaultValues = {
-      AAC_A: 0.1,
-      AAC_C: 0.2,
-      AAC_D: 0.3,
-      AAC_E: 0.4,
-      AAC_F: 0.5,
-      AAC_G: 0.6,
-      AAC_H: 0.7,
-      AAC_I: 0.8,
-      AAC_K: 0.9,
-      AAC_L: 0.1,
-      AAC_M: 0.11,
-      AAC_N: 0.12,
-      AAC_P: 0.13,
-      AAC_Q: 0.14,
-      AAC_R: 0.15,
-      AAC_S: 0.16,
-      AAC_T: 0.17,
-      AAC_V: 0.18,
-      AAC_W: 0.19,
-      AAC_Y: 0.2,
-      PCP_PC: 0.1,
-      PCP_NC: 0.2,
-      PCP_NE: 0.3,
-      PCP_PO: 0.4,
-      PCP_NP: 0.5,
-      PCP_AL: 0.6,
-      PCP_CY: 0.7,
-      PCP_AR: 0.8,
-      PCP_AC: 0.9,
-      PCP_BS: 0.1,
-      PCP_NE_pH: 0.11,
-      PCP_HB: 0.12,
-      PCP_HL: 0.13,
-      PCP_NT: 0.14,
-      PCP_HX: 0.15,
-      PCP_SC: 0.16,
-      PCP_SS_HE: 0.17,
-      PCP_SS_ST: 0.18,
-      PCP_SS_CO: 0.19,
-      PCP_SA_BU: 0.2,
-      PCP_SA_EX: 0.21,
-      PCP_SA_IN: 0.22,
-      PCP_TN: 0.23,
-      PCP_SM: 0.24,
-      PCP_LR: 0.25,
-      PCP_Z1: 0.26,
-      PCP_Z2: 0.27,
-      PCP_Z3: 0.28,
-      PCP_Z4: 0.29,
-      PCP_Z5: 0.3,
-      SEP: 0.31,
-      SER_A: 0.32,
-      SER_C: 0.33,
-      SER_D: 0.34,
-      SER_E: 0.35,
-      SER_F: 0.36,
-      SER_G: 0.37,
-      SER_H: 0.38,
-      SER_I: 0.39,
-      SER_K: 0.4,
-      SER_L: 0.41,
-      SER_M: 0.42,
-      SER_N: 0.43,
-      SER_P: 0.44,
-      SER_Q: 0.45,
-      SER_R: 0.46,
-      SER_S: 0.47,
-      SER_T: 0.48,
-      SER_V: 0.49,
-      SER_W: 0.5,
-      SER_Y: 0.51,
-    };
+  const [selectedProtein, setSelectedProtein] = useState<any>(null); // Selected protein data
+  const [selectedModel, setSelectedModel] = useState<string>(''); // Selected model
+  const [prediction, setPrediction] = useState<any>(null); // Store prediction result
+  const [errorMessages, setErrorMessages] = useState<string[]>([]); // Store error messages
 
-  // const [formData, setFormData] = useState<any>({
-  //   AAC_A: "",
-  //   AAC_C: "",
-  //   AAC_D: "",
-  //   AAC_E: "",
-  //   AAC_F: "",
-  //   AAC_G: "",
-  //   AAC_H: "",
-  //   AAC_I: "",
-  //   AAC_K: "",
-  //   AAC_L: "",
-  //   AAC_M: "",
-  //   AAC_N: "",
-  //   AAC_P: "",
-  //   AAC_Q: "",
-  //   AAC_R: "",
-  //   AAC_S: "",
-  //   AAC_T: "",
-  //   AAC_V: "",
-  //   AAC_W: "",
-  //   AAC_Y: "",
-  //   PCP_PC: "",
-  //   PCP_NC: "",
-  //   PCP_NE: "",
-  //   PCP_PO: "",
-  //   PCP_NP: "",
-  //   PCP_AL: "",
-  //   PCP_CY: "",
-  //   PCP_AR: "",
-  //   PCP_AC: "",
-  //   PCP_BS: "",
-  //   PCP_NE_pH: "",
-  //   PCP_HB: "",
-  //   PCP_HL: "",
-  //   PCP_NT: "",
-  //   PCP_HX: "",
-  //   PCP_SC: "",
-  //   PCP_SS_HE: "",
-  //   PCP_SS_ST: "",
-  //   PCP_SS_CO: "",
-  //   PCP_SA_BU: "",
-  //   PCP_SA_EX: "",
-  //   PCP_SA_IN: "",
-  //   PCP_TN: "",
-  //   PCP_SM: "",
-  //   PCP_LR: "",
-  //   PCP_Z1: "",
-  //   PCP_Z2: "",
-  //   PCP_Z3: "",
-  //   PCP_Z4: "",
-  //   PCP_Z5: "",
-  //   SEP: "",
-  //   SER_A: "",
-  //   SER_C: "",
-  //   SER_D: "",
-  //   SER_E: "",
-  //   SER_F: "",
-  //   SER_G: "",
-  //   SER_H: "",
-  //   SER_I: "",
-  //   SER_K: "",
-  //   SER_L: "",
-  //   SER_M: "",
-  //   SER_N: "",
-  //   SER_P: "",
-  //   SER_Q: "",
-  //   SER_R: "",
-  //   SER_S: "",
-  //   SER_T: "",
-  //   SER_V: "",
-  //   SER_W: "",
-  //   SER_Y: "",
-  // });
+  const [formData, setFormData] = useState<any>({
+    AAC_A: selectedProtein?.AAC_A || "",
+    AAC_C: selectedProtein?.AAC_C || "",
+    AAC_D: selectedProtein?.AAC_D || "",
+    AAC_E: selectedProtein?.AAC_E || "",
+    AAC_F: selectedProtein?.AAC_F || "",
+    AAC_G: selectedProtein?.AAC_G || "",
+    AAC_H: selectedProtein?.AAC_H || "",
+    AAC_I: selectedProtein?.AAC_I || "",
+    AAC_K: selectedProtein?.AAC_K || "",
+    AAC_L: selectedProtein?.AAC_L || "",
+    AAC_M: selectedProtein?.AAC_M || "",
+    AAC_N: selectedProtein?.AAC_N || "",
+    AAC_P: selectedProtein?.AAC_P || "",
+    AAC_Q: selectedProtein?.AAC_Q || "",
+    AAC_R: selectedProtein?.AAC_R || "",
+    AAC_S: selectedProtein?.AAC_S || "",
+    AAC_T: selectedProtein?.AAC_T || "",
+    AAC_V: selectedProtein?.AAC_V || "",
+    AAC_W: selectedProtein?.AAC_W || "",
+    AAC_Y: selectedProtein?.AAC_Y || "",
+    PCP_PC: selectedProtein?.PCP_PC || "",
+    PCP_NC: selectedProtein?.PCP_NC || "",
+    PCP_NE: selectedProtein?.PCP_NE || "",
+    PCP_PO: selectedProtein?.PCP_PO || "",
+    PCP_NP: selectedProtein?.PCP_NP || "",
+    PCP_AL: selectedProtein?.PCP_AL || "",
+    PCP_CY: selectedProtein?.PCP_CY || "",
+    PCP_AR: selectedProtein?.PCP_AR || "",
+    PCP_AC: selectedProtein?.PCP_AC || "",
+    PCP_BS: selectedProtein?.PCP_BS || "",
+    PCP_NE_pH: selectedProtein?.PCP_NE_pH || "",
+    PCP_HB: selectedProtein?.PCP_HB || "",
+    PCP_HL: selectedProtein?.PCP_HL || "",
+    PCP_NT: selectedProtein?.PCP_NT || "",
+    PCP_HX: selectedProtein?.PCP_HX || "",
+    PCP_SC: selectedProtein?.PCP_SC || "",
+    PCP_SS_HE: selectedProtein?.PCP_SS_HE || "",
+    PCP_SS_ST: selectedProtein?.PCP_SS_ST || "",
+    PCP_SS_CO: selectedProtein?.PCP_SS_CO || "",
+    PCP_SA_BU: selectedProtein?.PCP_SA_BU || "",
+    PCP_SA_EX: selectedProtein?.PCP_SA_EX || "",
+    PCP_SA_IN: selectedProtein?.PCP_SA_IN || "",
+    PCP_TN: selectedProtein?.PCP_TN || "",
+    PCP_SM: selectedProtein?.PCP_SM || "",
+    PCP_LR: selectedProtein?.PCP_LR || "",
+    PCP_Z1: selectedProtein?.PCP_Z1 || "",
+    PCP_Z2: selectedProtein?.PCP_Z2 || "",
+    PCP_Z3: selectedProtein?.PCP_Z3 || "",
+    PCP_Z4: selectedProtein?.PCP_Z4 || "",
+    PCP_Z5: selectedProtein?.PCP_Z5 || "",
+    SEP: selectedProtein?.SEP || "",
+    SER_A: selectedProtein?.SER_A || "",
+    SER_C: selectedProtein?.SER_C || "",
+    SER_D: selectedProtein?.SER_D || "",
+    SER_E: selectedProtein?.SER_E || "",
+    SER_F: selectedProtein?.SER_F || "",
+    SER_G: selectedProtein?.SER_G || "",
+    SER_H: selectedProtein?.SER_H || "",
+    SER_I: selectedProtein?.SER_I || "",
+    SER_K: selectedProtein?.SER_K || "",
+    SER_L: selectedProtein?.SER_L || "",
+    SER_M: selectedProtein?.SER_M || "",
+    SER_N: selectedProtein?.SER_N || "",
+    SER_P: selectedProtein?.SER_P || "",
+    SER_Q: selectedProtein?.SER_Q || "",
+    SER_R: selectedProtein?.SER_R || "",
+    SER_S: selectedProtein?.SER_S || "",
+    SER_T: selectedProtein?.SER_T || "",
+    SER_V: selectedProtein?.SER_V || "",
+    SER_W: selectedProtein?.SER_W || "",
+    SER_Y: selectedProtein?.SER_Y || "",
+  });
 
-  const [formData, setFormData] = useState(defaultValues);
-
-
-  const [prediction, setPrediction] = useState<any>(null);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevData: any) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    try {
-      const response = await fetch("http://127.0.0.1:5000/api/predict/KNeighborsClassifier", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-      setPrediction(data); // Assuming the backend returns prediction as an object with 'prediction' and 'prediction_label'
-    } catch (error) {
-      console.error("Error submitting data:", error);
-    }
-  };
-
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-        }
-      });
-    });
-
-    document.querySelectorAll(".scroll-animate").forEach((el) => {
-      observer.observe(el);
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
+  // Labels for form fields
   const labels = {
     AAC_A: "Amino Acid Alanine",
     AAC_C: "Amino Acid Cysteine",
@@ -328,7 +143,7 @@ export const ProteinForm = () => {
     PCP_Z3: "Protein Category Z3",
     PCP_Z4: "Protein Category Z4",
     PCP_Z5: "Protein Category Z5",
-    SEP: "Separator",
+    SEP: "Serine Protein",
     SER_A: "Serine Protein A",
     SER_C: "Serine Protein C",
     SER_D: "Serine Protein D",
@@ -350,44 +165,242 @@ export const ProteinForm = () => {
     SER_W: "Serine Protein W",
     SER_Y: "Serine Protein Y",
   };
+
+  // Fetch protein entries when the component is mounted
+  useEffect(() => {
+    Papa.parse("/data.csv", {
+      download: true,
+      header: true,
+      dynamicTyping: true,
+      complete: (result) => {
+        setProteinEntries(result.data);
+        setLoading(false);
+      },
+      error: (error) => {
+        console.error("Error parsing CSV file:", error);
+        setLoading(false);
+      },
+    });
+  }, []);
+
+  // Update form data when protein is selected
+  useEffect(() => {
+    if (selectedProtein) {
+      setFormData((prevData) => ({
+        ...prevData,
+        ...Object.keys(selectedProtein)
+          .filter((key) => key !== "Entry" && key !== "Label")  // Exclude "Entry" and "Label" from form data
+          .reduce((acc, key) => {
+            acc[key] = selectedProtein[key];
+            return acc;
+          }, {}),
+      }));
+    }
+  }, [selectedProtein]);
+
+  // Handle protein selection
+  const handleSelectProtein = (proteinId: string) => {
+    const selected = proteinEntries.find((entry) => entry.Entry === proteinId);
+    if (selected) {
+      setSelectedProtein(selected);
+    }
+  };
+
+  // Handle model selection
+  const handleSelectModel = (model: string) => {
+    setSelectedModel(model);
+  };
+
+  // Handle form input change
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+
+
+  // Validation function
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    let errorMessage = ""; // Initialize error message
+
+    // Validate form data
+    Object.keys(formData).some((key) => {
+      if (!formData[key] && formData[key] != '0') {
+        errorMessage = `Please select data entry or fill in the values!`;
+        return true; // Exit loop on the first missing field
+      }
+      return false;
+    });
+
+    if (errorMessage) {
+      setPrediction({ error: errorMessage });
+      return; // Stop further processing
+    }
+
+    if (!selectedModel) {
+      errorMessage = "Please select a model.";
+    }
+
+    if (errorMessage) {
+      setPrediction({ error: errorMessage });
+      return; // Stop further processing
+    }
+
+
+    setSubmitLoading(true); // Start loading animation
+
+    try {
+      const response = await fetch(`http://127.0.0.1:5000/api/predict/${selectedModel}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+      setPrediction(data); // Assuming the backend returns prediction as an object with 'prediction' and 'prediction_label'
+    } catch (error) {
+      console.error("Error submitting data:", error);
+    }
+    setSubmitLoading(false);
+  };
+
+
+  console.log(selectedProtein)
+
+
   return (
     <section className="relative py-16">
       <div className="absolute inset-0 bg-gradient-to-tr from-blue-50 via-indigo-50 to-purple-50 animate-gradient-flow"></div>
       <div className="max-w-4xl mx-auto px-4 relative z-10">
-        <h2 className="text-3xl font-bold text-center mb-8">Enter Protein Data</h2>
-        <Card className="p-6 bg-white/80 backdrop-blur-sm hover:shadow-xl transition-shadow duration-300">
-          <form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-h-96 overflow-y-auto p-2">
-              {Object.keys(formData).map((field) => (
-                <div key={field} className="space-y-2">
-                  <Label htmlFor={field} className="flex items-center gap-2">
-                    {labels[field] || field.replace("_", " ")}
-                  </Label>
-                  <Input
-                    id={field}
-                    name={field}
-                    placeholder={`Enter value for ${labels[field] || field.replace("_", " ")}`}
-                    value={formData[field]}
-                    onChange={handleInputChange}
-                    className="w-full"
-                    type="number"
-                    step="any" // To handle floating point numbers
-                  />
-                </div>
-              ))}
+        <h2 className="text-3xl font-bold text-center mb-8">Protein Status Predictor</h2>
+        <div className="max-w-2xl mx-auto bg-white/80 backdrop-blur-sm rounded-lg shadow-lg p-8">
+          <h2 className="text-2xl font-semibold text-center mb-8">Select Protein and Model</h2>
+          {loading ? (
+            <div className="flex items-center justify-center ">
+              <div className="animate-pulse h-10 w-10 border-4 border-dashed border-blue-500 rounded-full"></div>
             </div>
-            <Button type="submit" className="mt-4 w-full">
-              Submit
-            </Button>
-          </form>
-        </Card>
+          ) : (
+            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              {/* Protein Select */}
+              <div className="w-full sm:w-[280px]">
+                <Select onValueChange={handleSelectProtein}>
+                  <SelectTrigger className="w-full">
+                    <Search className="mr-2 h-4 w-4" />
+                    <SelectValue placeholder="Select Data Entry" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {proteinEntries.map((entry) => (
+                      <SelectItem key={entry.Entry} value={entry.Entry}>
+                        {entry.Entry}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-        {prediction && (
-          <div className="mt-6 text-center">
-            <h3 className="text-2xl font-bold">Prediction Result</h3>
-            <p>{`Prediction: ${prediction.prediction_label}`}</p>
-          </div>
-        )}
+              {/* Model Select */}
+              <div className="w-full sm:w-[280px]">
+                <Select value={selectedModel} onValueChange={handleSelectModel}>
+                  <SelectTrigger className="w-full">
+                    <Search className="mr-2 h-4 w-4" />
+                    <SelectValue placeholder="Select Model" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="RandomForestClassifier">Random Forest</SelectItem>
+                    <SelectItem value="GradientBoostingClassifier">Gradient Boosting</SelectItem>
+                    <SelectItem value="XGBClassifier">XGBoost</SelectItem>
+                    <SelectItem value="LogisticRegression">Logistic Regression</SelectItem>
+                    <SelectItem value="DecisionTreeClassifier">Decision Tree</SelectItem>
+                    <SelectItem value="KNeighborsClassifier">K-Nearest Neighbors</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* <Button type="submit" className="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white button-hover">
+                Predict
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button> */}
+              <Button
+                type="submit"
+                className={`w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white button-hover flex items-center justify-center ${loading ? "opacity-70 cursor-not-allowed" : ""
+                  }`}
+                disabled={loading} // Disable button when loading
+              >
+                {loading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-white mr-2"></div>
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    Predict
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </>
+                )}
+              </Button>
+
+            </form>
+          )}
+
+          {/* Error Messages */}
+          {errorMessages.length > 0 && (
+            <div className="mt-4 text-red-500">
+              <ul>
+                {errorMessages.map((error, index) => (
+                  <li key={index}>{error}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Protein Form Fields */}
+          <Card className="mt-8 p-6 bg-white/80 backdrop-blur-sm">
+            <form onSubmit={handleSubmit}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-h-96 overflow-y-auto p-2">
+                {Object.keys(formData).map((field) => (
+                  <div key={field} className="space-y-2">
+                    <Label htmlFor={field} className="flex items-center gap-2">
+                      {labels[field] || field.replace("_", " ")}
+                    </Label>
+                    <Input
+                      id={field}
+                      name={field}
+                      placeholder={`Enter value for ${labels[field] || field.replace("_", " ")}`}
+                      value={formData[field]}
+                      onChange={handleInputChange}
+                      className="w-full"
+                      type="number"
+                      step="any"
+                    />
+                  </div>
+                ))}
+              </div>
+            </form>
+          </Card>
+
+          {/* Show Prediction Result */}
+          {/* Show Validation Error */}
+          {prediction?.error && (
+            <div className="mt-4 text-center text-red-600 font-medium">
+              {prediction.error}
+            </div>
+          )}
+
+
+          {prediction && prediction.prediction_label && (
+            <div className="mt-6 text-center">
+              <h3 className="text-2xl font-bold">Prediction Result</h3>
+              <p>{`Prediction: ${prediction.prediction_label}`}</p>
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );
