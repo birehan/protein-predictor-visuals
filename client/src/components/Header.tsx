@@ -40,23 +40,21 @@ export const Header = () => {
               Home
             </Link>
             <Link 
-              to="/about" 
-              className="text-gray-600 hover:text-blue-600 transition-all hover:-translate-y-0.5"
+              to="https://covid19.india.gov.in/documents/" 
+              target="_new"
+              className={`transition-all hover:-translate-y-0.5 ${
+                isHome 
+                  ? "text-blue-600 font-semibold" 
+                  : "text-gray-600 hover:text-blue-600"
+              }`}
             >
-              About
-            </Link>
-            <Link 
-              to="/contact" 
-              className="text-gray-600 hover:text-blue-600 transition-all hover:-translate-y-0.5"
-            >
-              Contact
-            </Link>
             <Button 
               variant="outline" 
               className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300"
             >
               Documentation
             </Button>
+            </Link>
           </nav>
 
           {/* Mobile navigation */}
@@ -79,26 +77,24 @@ export const Header = () => {
               >
                 Home
               </Link>
-              <Link 
-                to="/about" 
-                className="text-gray-600 hover:bg-gray-50 px-4 py-2 rounded-lg transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                About
-              </Link>
-              <Link 
-                to="/contact" 
-                className="text-gray-600 hover:bg-gray-50 px-4 py-2 rounded-lg transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Contact
-              </Link>
+                <a href='https://covid19.india.gov.in/documents/'>
+                <Link 
+              to="https://covid19.india.gov.in/documents/" 
+              target="_new"
+              className={`transition-all hover:-translate-y-0.5 ${
+                isHome 
+                  ? "text-blue-600 font-semibold" 
+                  : "text-gray-600 hover:text-blue-600"
+              }`}
+            >
               <Button 
                 variant="outline" 
                 className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300"
               >
                 Documentation
               </Button>
+              </Link>
+              </a>
             </nav>
           </div>
         </div>
